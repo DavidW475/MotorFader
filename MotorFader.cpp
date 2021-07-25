@@ -1,6 +1,6 @@
 #include "MotorFader.h"
 
-MotorFader::MotorFader(int motor_pin_a, int motor_pin_b, int enable_pin, int potentiometer_pin, int faderMin, int faderMax, int tolerance){
+MotorFader::MotorFader(int motor_pin_a, int motor_pin_b, int enable_pin, int potentiometer_pin, int faderMin, int faderMax, int tolerance, int faderSpeed1, int faderSpeed2, int faderSpeed3, int faderSpeedDist1, int faderSpeedDist2){
   this->motor_pin_a = motor_pin_a;
   this->motor_pin_b = motor_pin_b;
   this->enable_pin = enable_pin;
@@ -8,6 +8,11 @@ MotorFader::MotorFader(int motor_pin_a, int motor_pin_b, int enable_pin, int pot
   this->faderMin = faderMin;
   this->faderMax = faderMax;
   this->tolerance = tolerance;
+  this->faderSpeed[0] = faderSpeed1;
+  this->faderSpeed[1] = faderSpeed2;
+  this->faderSpeed[2] = faderSpeed3;
+  this->faderSpeedDist[0] = faderSpeed1;
+  this->faderSpeedDist[1] = faderSpeed2;
 }
 
 int MotorFader::GetFaderMin(){
@@ -30,8 +35,15 @@ int MotorFader::GetFaderMaxTarget(int target){
   return target + tolerance;
 }
 
-int MotorFader::GetPos(){
+int MotorFader::GetPotentiometerValue(){
   return analogRead(potentiometer_pin);
+}
+
+int MotorFader::GetPos(){
+  int pos = map(analogRead(potentiometer_pin), faderMin, faderMax, 0, 100);
+  if (pos > 100) return 100;
+  if (pos < 0) return 0;
+  return pos;
 }
 
 int MotorFader::GetTarget(int target){
@@ -43,17 +55,10 @@ void MotorFader::SetFaderSpeed(int val){
 }
 
 void MotorFader::ToPos(int target){
-  int currentPos = GetPos();
+  int currentPos = GetPotentiometerValue();
   int targetPos = map(target, 0, 100, faderMin, faderMax);
   int targetMin = GetFaderMinTarget(targetPos);
   int targetMax = GetFaderMaxTarget(targetPos);
-  if (target == 100){
-    targetMin = faderMax;
-    targetMax = faderMax + 2 * tolerance;
-  }else if (target == 0){
-    targetMin = faderMin - 2 * tolerance;
-    targetMax = faderMin;
-  }
 
   SetFaderSpeed(2);
   int i = 0;
@@ -82,7 +87,7 @@ void MotorFader::ToPos(int target){
     }else{
       i++;
     }
-    currentPos = GetPos();
+    currentPos = GetPotentiometerValue();
   }
   MotorStop();
 }
