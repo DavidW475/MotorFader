@@ -28,10 +28,14 @@ int MotorFader::GetFaderTolerance(){
 }
 
 int MotorFader::GetFaderMinTarget(int target){
+  if (target < faderMin) return faderMin;
+  if (target > faderMax) return faderMax;
   return target - tolerance;
 }
 
 int MotorFader::GetFaderMaxTarget(int target){
+  if (target < faderMin) return faderMin;
+  if (target > faderMax) return faderMax;
   return target + tolerance;
 }
 
@@ -55,6 +59,7 @@ void MotorFader::SetFaderSpeed(int val){
 }
 
 void MotorFader::ToPos(int target){
+  if (target > 100 || target < 0) return;
   int currentPos = GetPotentiometerValue();
   int targetPos = map(target, 0, 100, faderMin, faderMax);
   int targetMin = GetFaderMinTarget(targetPos);
