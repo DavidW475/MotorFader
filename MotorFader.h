@@ -22,18 +22,18 @@ class MotorFader {
     void SetFaderSpeed(int val);
   public:
     /**
-     * @param motor_pin_a
-     * @param motor_pinb
-     * @param enable_pin
-     * @param potentiometer_pin
-     * @param faderMin
-     * @param faderMax
-     * @param tolerance
-     * @param faderSpeed1
-     * @param faderSpeed2
-     * @param faderSpeed3
-     * @param faderSpeedDist1
-     * @param faderSpeedDist2
+     * @param motor_pin_a first motor pin on the Arduino
+     * @param motor_pinb second pin on the Arduino
+     * @param enable_pin enable pin on the Arduino
+     * @param potentiometer_pin potentiometer_pin on the Arduino
+     * @param faderMin the minimum value of the potentiometer
+     * @param faderMax the maximum value of the potentiometer
+     * @param tolerance the tolerance of the target point (potentiometer value)
+     * @param faderSpeed1 fastest fader speed (between 0 and 255)
+     * @param faderSpeed2 medium fader speed (between 0 and 255)
+     * @param faderSpeed3 low fader speed (between 0 and 255)
+     * @param faderSpeedDist1 the potentiometer distance to the target where the fader switches between faderSpeed1 and faderSpeed2
+     * @param faderSpeedDist2 the potentiometer distance to the target where the fader switches between faderSpeed2 and faderSpeed3
     **/
     MotorFader(int motor_pin_a, int motor_pin_b, int enable_pin, int potentiometer_pin, int faderMin, int faderMax, int tolerance, int faderSpeed1, int faderSpeed2, int faderSpeed3, int faderSpeedDist1, int faderSpeedDist2);
 
@@ -80,23 +80,23 @@ class MotorFader {
     int GetTarget(int target);
 
     /**
-     * drives the fader to a given position
-     * @param target the position the fader should drive to (values between 0 and 100)
+     * moves the fader to a target position
+     * @param target the target the fader moves to (values between 0 and 100)
     **/
     void ToPos(int target);
 
     /**
-     * the fader drives up
+     * fader moves up
     **/
     void MotorUp();
 
     /**
-     * the fader drives down
+     * fader moves down
     **/
     void MotorDown();
 
     /**
-     * the fader stops
+     * fader stops
     **/
     void MotorStop();
 };
